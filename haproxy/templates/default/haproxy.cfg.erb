@@ -1,0 +1,65 @@
+global
+  log 127.0.0.1   local0
+  log 127.0.0.1   local1 notice
+  # log loghost    local0 info
+  maxconn 80000
+  # debug
+  # quiet
+  user haproxy
+  group haproxy
+  stats socket /tmp/haproxy.sock
+
+defaults
+  log             global
+  mode            http
+  option          httplog
+  option          dontlognull
+  retries         3
+  option          redispatch
+  maxconn        80000
+  timeout client 60s             # Client and server timeout must match the longest
+  timeout server 60s             # time we may wait for a response from the server.
+  timeout queue  120s            # Don't queue requests too long if saturated.
+  timeout connect 10s            # There's no reason to change this one.
+  timeout http-request 30s       # A complete request may never take that long.
+  option          httpclose      # disable keepalive (HAProxy does not yet support the HTTP keep-alive mode)
+  option          abortonclose   # enable early dropping of aborted requests from pending queue
+  option          httpchk        # enable HTTP protocol to check on servers health
+  stats auth opsworks:mqr9rl9ahi
+  stats uri /haproxy?stats
+
+
+# Set up application listeners here.
+
+backend s3_souscription
+  reqrep ^GET\ /Souscription/\ HTTP/1.1 GET\ /souscription.html\ HTTP/1.1
+  server s3_souscription1 node[:haproxy][:s3_bucket]
+backend s3_assets
+  reqrep ^([^\ :]*)\ /Souscription/assets/(.*)     \1\ /assets/\2
+  server s3_assets1 node[:haproxy][:s3_bucket]
+backend s3_favicon
+  reqrep ^([^\ :]*)\ /Souscription/favicon(.*)     \1\ /favicon\2
+  server s3_favicon1 node[:haproxy][:s3_bucket]
+backend planete_oui
+  reqirep ^Host: Host:\ node[:haproxy][:forwarded_host]
+  server planete_oui1 node[:haproxy][:target_host]
+
+
+frontend http-in
+  bind :80
+
+  use_backend s3_assets if { path_beg /Souscription/assets }
+  use_backend s3_favicon if { path_beg /Souscription/favicon }
+  use_backend s3_souscription if { path_beg /Souscription/ }
+
+  default_backend planete_oui
+
+# frontend https-in
+#   mode tcp
+#   bind :443
+
+#   use_backend s3_assets if { path_beg /Souscription/assets }
+#   use_backend s3_favicon if { path_beg /Souscription/favicon }
+#   use_backend s3_souscription if { path_beg /Souscription/ }
+
+#  default_backend planete_oui
