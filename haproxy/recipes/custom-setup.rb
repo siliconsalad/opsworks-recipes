@@ -9,8 +9,8 @@ node[:deploy].each do |app_name, deploy|
     code <<-EOH
       echo deb http://archive.ubuntu.com/ubuntu trusty-backports main universe | \
       sudo tee /etc/apt/sources.list.d/backports.list
-      apt-get update
-      apt-get install haproxy -t trusty-backports
+      apt-get update -y
+      apt-get install -y haproxy -t trusty-backports
     EOH
   end
 end
