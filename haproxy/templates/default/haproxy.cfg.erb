@@ -33,16 +33,16 @@ defaults
 
 backend s3_souscription
   reqrep ^GET\ /Souscription/\ HTTP/1.1 GET\ /souscription.html\ HTTP/1.1
-  server s3_souscription1 node[:haproxy][:s3_bucket]
+  server s3_souscription1 <%= node[:haproxy][:s3_bucket] %>
 backend s3_assets
   reqrep ^([^\ :]*)\ /Souscription/assets/(.*)     \1\ /assets/\2
-  server s3_assets1 node[:haproxy][:s3_bucket]
+  server s3_assets1 <%= node[:haproxy][:s3_bucket] %>
 backend s3_favicon
   reqrep ^([^\ :]*)\ /Souscription/favicon(.*)     \1\ /favicon\2
-  server s3_favicon1 node[:haproxy][:s3_bucket]
+  server s3_favicon1 <%= node[:haproxy][:s3_bucket] %>
 backend planete_oui
-  reqirep ^Host: Host:\ node[:haproxy][:forwarded_host]
-  server planete_oui1 node[:haproxy][:target_host]
+  reqirep ^Host: Host:\ <%= node[:haproxy][:forwarded_host] %>
+  server planete_oui1 <%= node[:haproxy][:target_host] %>
 
 
 frontend http-in
