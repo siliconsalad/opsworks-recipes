@@ -28,7 +28,6 @@ defaults
   stats auth opsworks:mqr9rl9ahi
   stats uri /haproxy?stats
 
-
 # Set up application listeners here.
 
 backend s3_souscription
@@ -38,7 +37,7 @@ backend s3_assets
   reqrep ^([^\ :]*)\ /Souscription/assets/(.*)     \1\ /assets/\2
   server s3_assets1 <%= node[:haproxy][:s3_bucket] %>
 backend s3_favicon
-  reqrep ^([^\ :]*)\ /Souscription/favicon(.*)     \1\ /favicon\2
+  reqrep ^([^\ :]*)\ /favicon(.*)     \1\ /favicon\2
   server s3_favicon1 <%= node[:haproxy][:s3_bucket] %>
 backend planete_oui
   reqirep ^Host: Host:\ <%= node[:haproxy][:forwarded_host] %>
@@ -48,18 +47,11 @@ backend planete_oui
 frontend http-in
   bind :80
 
+  acl is_proxy_https hdr(X-Forwarded-Proto) https
+  redirect scheme https code 301 if ! is_proxy_https
+
   use_backend s3_assets if { path_beg /Souscription/assets }
   use_backend s3_favicon if { path_beg /Souscription/favicon }
   use_backend s3_souscription if { path_beg /Souscription/ }
 
   default_backend planete_oui
-
-# frontend https-in
-#   mode tcp
-#   bind :443
-
-#   use_backend s3_assets if { path_beg /Souscription/assets }
-#   use_backend s3_favicon if { path_beg /Souscription/favicon }
-#   use_backend s3_souscription if { path_beg /Souscription/ }
-
-#  default_backend planete_oui
