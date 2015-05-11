@@ -28,28 +28,25 @@ defaults
   stats auth opsworks:mqr9rl9ahi
   stats uri /haproxy?stats
 
-userlist UsersFor_AcmeCorp
-  user <%= node[:haproxy][:http_user_name] %> insecure-password <%= node[:haproxy][:http_password] %>
+# userlist UsersFor_AcmeCorp
+#   user <%= node[:haproxy][:http_user_name] %> insecure-password <%= node[:haproxy][:http_password] %>
 
 # Set up application listeners here.
 
-backend s3_souscription
-  reqrep ^GET\ /Souscription/\ HTTP/1.1 GET\ /souscription.html\ HTTP/1.1
-  server s3_souscription1 <%= node[:haproxy][:s3_bucket] %>
-backend s3_assets
-  reqrep ^([^\ :]*)\ /Souscription/assets/(.*)     \1\ /assets/\2
-  server s3_assets1 <%= node[:haproxy][:s3_bucket] %>
-backend s3_favicon
-  reqrep ^([^\ :]*)\ /favicon(.*)     \1\ /favicon\2
-  server s3_favicon1 <%= node[:haproxy][:s3_bucket] %>
+# backend s3_souscription
+#   reqrep ^GET\ /Souscription/\ HTTP/1.1 GET\ /souscription.html\ HTTP/1.1
+#   server s3_souscription1 <%= node[:haproxy][:s3_bucket] %>
+# backend s3_assets
+#   reqrep ^([^\ :]*)\ /Souscription/assets/(.*)     \1\ /assets/\2
+#   server s3_assets1 <%= node[:haproxy][:s3_bucket] %>
+# backend s3_favicon
+#   reqrep ^([^\ :]*)\ /favicon(.*)     \1\ /favicon\2
+#   server s3_favicon1 <%= node[:haproxy][:s3_bucket] %>
 backend planete_oui
-  acl AuthOkay http_auth(UsersFor_AcmeCorp)
-  http-request auth realm SiliconSalad if !AuthOkay
-
   reqirep ^Host: Host:\ <%= node[:haproxy][:forwarded_host] %>
   server planete_oui1 <%= node[:haproxy][:target_host] %>:443 weight 1 maxconn 100 check ssl verify none
-backend s3_robots_txt
-  server s3_robots_txt <%= node[:haproxy][:s3_bucket] %>
+# backend s3_robots_txt
+#   server s3_robots_txt <%= node[:haproxy][:s3_bucket] %>
 
 frontend http-in
   bind :80
@@ -57,9 +54,9 @@ frontend http-in
   acl is_proxy_https hdr(X-Forwarded-Proto) https
   redirect scheme https code 301 if ! is_proxy_https
 
-  use_backend s3_assets if { path_beg /Souscription/assets }
-  use_backend s3_favicon if { path_beg /favicon }
-  use_backend s3_souscription if { path_beg /Souscription/ }
-  use_backend s3_robots_txt if { path_beg /robots.txt }
+  # use_backend s3_assets if { path_beg /Souscription/assets }
+  # use_backend s3_favicon if { path_beg /favicon }
+  # use_backend s3_souscription if { path_beg /Souscription/ }
+  # use_backend s3_robots_txt if { path_beg /robots.txt }
 
   default_backend planete_oui
