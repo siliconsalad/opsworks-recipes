@@ -31,15 +31,26 @@ end
 
 include_recipe 'haproxy::service'
 
+script "upgrade_haproxy" do
+  interpreter "bash"
+  user "root"
+  cwd "/home/ubuntu/"
+  code <<-EOH
+    echo deb http://archive.ubuntu.com/ubuntu trusty-backports main universe | \
+    sudo tee /etc/apt/sources.list.d/backports.list
+    apt-get update -y
+    apt-get install -o Dpkg::Options::="--force-confold" --force-yes -y haproxy -t trusty-backports
+  EOH
+end
+
 template '/etc/haproxy/haproxy.cfg' do
   source 'haproxy.cfg.erb'
   owner 'root'
   group 'root'
   mode 0644
-  # notifies :restart, "service[haproxy]"
+  notifies :restart, "service[haproxy]"
 end
 
 service 'haproxy' do
-  # action [:enable, :start]
-  action [:enable]
+  action [:enable, :start]
 end
