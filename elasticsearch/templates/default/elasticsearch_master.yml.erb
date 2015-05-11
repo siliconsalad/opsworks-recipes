@@ -1,0 +1,18 @@
+cluster.name: '<%= @elasticsearch_cluster %>'
+bootstrap.mlockall: true
+cloud:
+  aws:
+    access_key: '<%= @elasticsearch_access_key %>'
+    secret_key: '<%= @elasticsearch_secret_key %>'
+    region: '<%= @elasticsearch_region %>'
+discovery:
+  type: 'ec2'
+  ec2:
+    tag:
+      es-cluster: '<%= @elasticsearch_cluster %>'
+gateway:
+  recover_after_nodes: 1
+  recover_after_time: 5m
+  expected_nodes: 1
+index:
+  number_of_replicas: 0

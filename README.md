@@ -12,3 +12,7 @@ Add given SSH keys to servers
 Configure Nginx for Rails with http authentication
 
 * Configure: nginx-custom::configure;
+
+### Elasticsearch
+
+Install Elasticsearch 1.3.4 (master) and install aws plugin
