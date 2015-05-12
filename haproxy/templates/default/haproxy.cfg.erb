@@ -51,6 +51,9 @@ backend planete_oui
 frontend http-in
   bind :80
 
+  acl host_planete_oui hdr(host) -i <%= node[:haproxy][:forwarded_host] %>
+  redirect location https://<%= node[:haproxy][:forwarded_host] %> code 301 if ! host_planete_oui
+
   acl is_proxy_https hdr(X-Forwarded-Proto) https
   redirect scheme https code 301 if ! is_proxy_https
 
