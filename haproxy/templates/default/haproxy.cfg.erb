@@ -35,21 +35,21 @@ userlist UsersFor_AcmeCorp
 
 backend s3_souscription
   reqrep ^GET\ /Souscription/\ HTTP/1.1 GET\ /souscription.html\ HTTP/1.1
-  server s3_souscription1 <%= node[:haproxy][:s3_bucket] %>
+  server s3_souscription1 <%= node[:haproxy][:s3_bucket] %>/subscription
 backend s3_assets
   reqrep ^([^\ :]*)\ /Souscription/assets/(.*)     \1\ /assets/\2
-  server s3_assets1 <%= node[:haproxy][:s3_bucket] %>
+  server s3_assets1 <%= node[:haproxy][:s3_bucket] %>/subscription
 backend s3_favicon
   reqrep ^([^\ :]*)\ /favicon(.*)     \1\ /favicon\2
-  server s3_favicon1 <%= node[:haproxy][:s3_bucket] %>
+  server s3_favicon1 <%= node[:haproxy][:s3_bucket] %>/subscription
 backend planete_oui
-  acl AuthOkay http_auth(UsersFor_AcmeCorp)
-  http-request auth realm SiliconSalad if !AuthOkay
+  # acl AuthOkay http_auth(UsersFor_AcmeCorp)
+  # http-request auth realm SiliconSalad if !AuthOkay
 
   reqirep ^Host: Host:\ <%= node[:haproxy][:forwarded_host] %>
   server planete_oui1 <%= node[:haproxy][:target_host] %>:443 weight 1 maxconn 100 check ssl verify none
 backend s3_robots_txt
-  server s3_robots_txt <%= node[:haproxy][:s3_bucket] %>
+  server s3_robots_txt <%= node[:haproxy][:s3_bucket] %>/subscription
 
 frontend http-in
   bind :80
