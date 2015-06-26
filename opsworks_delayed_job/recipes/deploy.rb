@@ -17,13 +17,6 @@ node[:deploy].each do |application, deploy|
 
   include_recipe "opsworks_delayed_job::setup"
 
-  bash "restart-all-delayed_job" do
-    user 'root'
-    code <<CODE
-    monit -g delayed_job restart
-    CODE
-  end
-
   # node.set[:opsworks][:rails_stack][:restart_command] = node[:delayed_job][application][:restart_command]
 
   # opsworks_deploy do
