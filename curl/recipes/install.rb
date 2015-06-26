@@ -7,7 +7,7 @@ node[:deploy].each do |app_name, deploy|
       user "root"
       cwd "/"
       code <<-EOH
-      apt-get install -y libcurl4-dev
+      apt-get install -y libcurl3 libcurl3-dev
       EOH
     end
   end
