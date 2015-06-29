@@ -51,6 +51,15 @@ backend planete_oui
 backend s3_robots_txt
   reqrep ^GET\ /robots.txt\ HTTP/1.1 GET\ /subscription/robots.txt\ HTTP/1.1
   server s3_robots_txt <%= node[:haproxy][:s3_bucket] %>
+backend s3_static
+  reqrep ^([^\ :]*)\ /lp/(.*)     \1\ /static/\2
+  server s3_static1 <%= node[:haproxy][:s3_bucket] %>
+backend s3_homepage
+  reqrep ^GET\ /\ HTTP/1.1 GET\ /static/index.html\ HTTP/1.1
+  server s3_homepage1 <%= node[:haproxy][:s3_bucket] %>
+backend s3_homepage_assets
+  reqrep ^([^\ :]*)\ /assets/(.*)     \1\ /static/assets/\2
+  server s3_homepage_assets1 <%= node[:haproxy][:s3_bucket] %>
 
 frontend http-in
   bind :80
@@ -62,5 +71,8 @@ frontend http-in
   use_backend s3_favicon if { path_beg /Souscription/favicon }
   use_backend s3_souscription if { path_beg /Souscription/ }
   use_backend s3_robots_txt if { path_beg /robots.txt }
+  use_backend s3_static if { path_beg /lp/ }
+  use_backend s3_homepage if { path_reg ^$|^/$ }
+  use_backend s3_homepage_assets if { path_beg /assets/ }
 
   default_backend planete_oui
