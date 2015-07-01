@@ -73,10 +73,21 @@ frontend http-in
   use_backend planete_oui if { path_beg /Souscription/Confirmation/ }
   use_backend planete_oui if { path_beg /Souscription/Avance/ }
   use_backend planete_oui if { path_beg /Souscription/Complete-Avance/ }
+  use_backend planete_oui if { path_beg /Souscription/Complete-Avance }
   use_backend planete_oui if { path_beg /Souscription/Download/ }
   use_backend planete_oui if { path_beg /Souscription/Suivi/ }
   use_backend planete_oui if { path_beg /Souscription/Signature/ }
   use_backend planete_oui if { path_beg /Souscription/Bulletin/ }
+
+  use_backend planete_oui if { path_beg /Souscription/css/ }
+  use_backend planete_oui if { path_beg /Souscription/javascript/ }
+  use_backend planete_oui if { path_beg /Souscription/images/ }
+  use_backend planete_oui if { path_beg /Souscription/fontface/ }
+
+  use_backend planete_oui if { path_beg /assets/logoutcheck }
+  use_backend planete_oui if { path_beg /assets/logincheck }
+
+  use_backend planete_oui if { path_beg /Souscription/download }
 
   use_backend s3_assets if { path_beg /Souscription/assets }
   use_backend s3_favicon if { path_beg /Souscription/favicon }
