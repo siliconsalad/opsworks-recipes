@@ -70,6 +70,8 @@ frontend http-in
   acl is_proxy_https hdr(X-Forwarded-Proto) https
   redirect scheme https code 301 if ! is_proxy_https
 
+  redirect prefix http://www.planete-oui.fr code 301 if { hdr(host) -i planete-oui.fr }
+
   use_backend planete_oui if { path_beg /Souscription/Confirmation/ }
   use_backend planete_oui if { path_beg /Souscription/Avance/ }
   use_backend planete_oui if { path_beg /Souscription/Complete-Avance/ }
