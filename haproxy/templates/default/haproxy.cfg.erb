@@ -34,7 +34,7 @@ userlist UsersFor_AcmeCorp
 # Set up application listeners here.
 
 backend s3_souscription
-  reqrep ^GET\ /Souscription/\ HTTP/1.1 GET\ /subscription/souscription.html\ HTTP/1.1
+  reqrep ^GET\ /Souscription/(.*)\ HTTP/1.1 GET\ /subscription/souscription.html\ HTTP/1.1
   server s3_souscription1 <%= node[:haproxy][:s3_bucket] %>
 backend s3_assets
   reqrep ^([^\ :]*)\ /Souscription/assets/(.*)     \1\ /subscription/assets/\2
@@ -70,7 +70,7 @@ frontend http-in
   acl is_proxy_https hdr(X-Forwarded-Proto) https
   redirect scheme https code 301 if ! is_proxy_https
 
-  redirect prefix http://www.planete-oui.fr code 301 if { hdr(host) -i planete-oui.fr }
+  redirect prefix http://<%= node[:haproxy][:forwarded_host] %> code 301 if { hdr(host) -i planete-oui.fr }
 
   redirect code 301 location / if { path_beg /index.php }
 
