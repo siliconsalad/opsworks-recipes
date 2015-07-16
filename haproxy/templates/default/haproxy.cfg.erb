@@ -72,6 +72,8 @@ frontend http-in
 
   redirect prefix http://www.planete-oui.fr code 301 if { hdr(host) -i planete-oui.fr }
 
+  redirect code 301 location / if { path_beg /index.php }
+
   use_backend planete_oui if { path_beg /Souscription/Confirmation/ }
   use_backend planete_oui if { path_beg /Souscription/Avance/ }
   use_backend planete_oui if { path_beg /Souscription/Complete-Avance/ }
