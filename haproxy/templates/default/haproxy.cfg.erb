@@ -76,6 +76,9 @@ frontend http-in
   acl is_index_with_special_param url_reg /(.*)option=com_rsform(.*)
   redirect code 301 location / if is_index_page !is_index_with_special_param
 
+  acl is_old_form_url url_reg /Souscription/form/(.*)
+  redirect code 301 location /Souscription/ if is_old_form_url
+
   use_backend planete_oui if { path_beg /Souscription/Confirmation/ }
   use_backend planete_oui if { path_beg /Souscription/Avance/ }
   use_backend planete_oui if { path_beg /Souscription/Complete-Avance/ }
