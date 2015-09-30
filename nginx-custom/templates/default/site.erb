@@ -44,6 +44,6 @@ server {
 }
 
 server {
-  server_name <%= @non_first_domains.join(' ') %>
-  return 301 <%= "$scheme://#{@domain}$request_uri" %>
+  server_name <%= @non_first_domains.join(' ') %>;
+  return 301 <%= "$scheme://#{@domain}$request_uri" %>;
 }
