@@ -13,7 +13,7 @@ node[:deploy].each do |app_name, deploy|
       variables(
         :proxy_url  => deploy[:environment][:proxy_url],
         :app_name   => app_name.gsub('-', '_'),
-        :domain     => (deploy[:domains].first)
+        :domain     => (deploy[:domains].first),
         :non_first_domains => (deploy[:domains][1..-1])
       )
     end
