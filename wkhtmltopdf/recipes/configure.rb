@@ -12,11 +12,12 @@ node[:deploy].each do |app_name, deploy|
   end
 
   execute "install wkhtmltox-0.12.2.1_linux-centos6-amd64.rpm" do
+    cwd "/usr/local/bin"
     command "rpm -ivh wkhtmltox-0.12.2.1_linux-centos6-amd64.rpm"
     action :run
   end
 
-  execute "rename wkhtmltopdf to wkhtmltopdf_bin" do
+  execute "rename wkhtmltopdf to wkhtmltopdf_bin" do 
     command "mv /usr/local/bin/wkhtmltopdf /usr/local/bin/wkhtmltopdf_bin"
   end
 
