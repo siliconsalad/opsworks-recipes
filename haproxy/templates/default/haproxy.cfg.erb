@@ -72,9 +72,9 @@ frontend http-in
 
   redirect prefix http://<%= node[:haproxy][:forwarded_host] %> code 301 if { hdr(host) -i planete-oui.fr }
 
-  acl is_index_page path_beg /index.php
-  acl is_index_with_special_param url_reg /(.*)option=com_rsform(.*)
-  redirect code 301 location / if is_index_page !is_index_with_special_param
+  # acl is_index_page path_beg /index.php
+  # acl is_index_with_special_param url_reg /(.*)option=com_rsform(.*)
+  # redirect code 301 location / if is_index_page !is_index_with_special_param
 
   acl is_old_form_url url_reg /Souscription/form/(.*)
   redirect code 301 location /Souscription/ if is_old_form_url
