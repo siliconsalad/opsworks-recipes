@@ -103,9 +103,9 @@ frontend http-in
   use_backend s3_favicon if { path_beg /Souscription/favicon }
   use_backend s3_souscription if { path_beg /Souscription/ }
   use_backend s3_robots_txt if { path_beg /robots.txt }
-  use_backend s3_homepage_with_params if { url_reg ^/\?(.*) }
+  # use_backend s3_homepage_with_params if { url_reg ^/\?(.*) }
   use_backend s3_static if { path_beg /lp/ }
-  use_backend s3_homepage if { path_reg ^$|^/$ }
-  use_backend s3_homepage_assets if { path_beg /assets/ }
+  # use_backend s3_homepage if { path_reg ^$|^/$ }
+  # use_backend s3_homepage_assets if { path_beg /assets/ }
 
   default_backend planete_oui
